@@ -1,0 +1,18 @@
+{
+  "dependencies": {
+    "apollo-server-express": "^3.13.0",
+    "audit": "^0.0.6",
+    "axios": "^1.7.9",
+    "dotenv": "^16.4.7",
+    "facturapi": "^4.4.2",
+    "graphql": "^16.9.0",
+    "mongoose": "^8.8.3",
+    "stripe": "^17.4.0",
+    "xmlhttprequest": "^1.8.0"
+  },
+  "devDependencies": {
+    "chai": "^5.1.2",
+    "mocha": "^11.0.1",
+    "sinon": "^19.0.2"
+  }
+}
