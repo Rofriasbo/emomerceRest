@@ -19,25 +19,29 @@ async function createProduct(product) {
 }
 
 async function createUser(user) {
+  console.log('ptm user aqui va: ', user);
   try {
     const facturapiUser = {
       legal_name: user.Name,
       tax_id: user.rfc,
-      tax_system: user.tax_system,
-      email: user.email,
+      tax_system: '612',
       address: {
         zip: user.address.zip,
-      }
+      },
+      email: user.email
+      
     };
     console.log('Datos enviados a Facturapi:', facturapiUser);
-    return await facturapi.customers.create(facturapiUser);
+    const elClientealv = await facturapi.customers.create(facturapiUser);
+    console.log('hsdfkjhsdfkjhsdfkjhsdfkjhsdf: ', elClientealv);
+    return elClientealv;
   } catch (error) {
     console.error('Error al crear el usuario en Facturapi:', {
       message: error.message,
       stack: error.stack,
-      response: error.response ? error.response.data : null
+      response: error
     });
-    throw new Error('No se pudo crear el usuario en Facturapi.');
+    //throw new Error('No se pudo crear el usuario en Facturapi.');
   }
 }
 

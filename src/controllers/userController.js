@@ -23,7 +23,7 @@ exports.getUserById = async (req, res) => {
 };
 
 // Crear un usuario y sincronizar con Facturapi
-exports.createUser = async (req, res) => {
+exports.createUsers = async (req, res) => {
     try {
         // Crear cliente en Facturapi
         const facturapiResponse = await createUser(req.body);
