@@ -23,9 +23,10 @@ exports.createProduct = async (req, res) => {
         // Crear el producto en Facturapi
         const facturapiProduct = await facturapiService.createProduct({
             name,
-            product_key,
+            description,
             price,
-            id
+            category,
+            product_key
         });
         console.log('Datos del producto para Facturapi:', { name, product_key, price });
         // Responder con el producto creado
