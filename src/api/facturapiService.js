@@ -11,11 +11,21 @@ const facturapi = new Facturapi('sk_test_ReqP6ZDz35Nna4gyAmJbOw7mwJV7o8mElKG9X02
 
 async function createProduct(product) {
   const facturapiProduct = {
-    description: product.description,
-    product_key: "50202306",
-    price: product.price
+    name: product.name,
+    price: product.price,
+    product_key: product.product_key
   };
-  return await facturapi.products.create(facturapiProduct);
+   
+  try {
+      return await facturapi.products.create(facturapiProduct);
+  } catch (error) {
+      console.error('Error al crear el producto en Facturapi:', {
+          message: error.message,
+          stack: error.stack,
+          response: error.response ? error.response.data : null
+      });
+      throw new Error('No se pudo crear el producto en Facturapi.');
+  }
 }
 
 async function createUser(user) {
