@@ -62,3 +62,15 @@ exports.deleteProduct = async (req, res) => {
         res.status(500).json({ message: 'Error deleting product', error });
     }
 };
+// Obtener un producto por product_key
+exports.getProductByKey = async (req, res) => {
+    const { productKey } = req.params;
+
+    try {
+        const product = await Product.findOne({ product_key: productKey });
+        if (!product) return res.status(404).json({ error: 'Product not found' });
+        res.json(product);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};

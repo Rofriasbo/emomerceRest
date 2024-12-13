@@ -7,13 +7,14 @@ const Facturapi = require('facturapi').default;
 
 //    de la organización emisora (https://dashboard.facturapi.io/integration/apikeys)
 const facturapi = new Facturapi('sk_test_ReqP6ZDz35Nna4gyAmJbOw7mwJV7o8mElKG9X02BMJ');
+const twilio = require('twilio');
 
 
 async function createProduct(product) {
   const facturapiProduct = {
-    name: product.name,
-    price: product.price,
-    product_key: product.product_key
+    description: product.description,
+    product_key: "50202306",
+    price: product.price
   };
    
   try {
