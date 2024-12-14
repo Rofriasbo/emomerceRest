@@ -17,7 +17,7 @@ Asegúrate de que tu sistema cumpla con los siguientes requisitos:
    Si aún no tienes el código, clónalo desde el repositorio remoto:
 
    ```bash
-   git clone https://github.com/KaryMC18/CarritoCompra_ApiRest.git
+   git clone https://github.com/Rofriasbo/emomerceRest
    cd ecomerce-rest
    ```
 
