@@ -1,0 +1,478 @@
+openapi: 3.0.0
+info:
+  title: API Documentation
+  version: 1.0.0
+  description: API para la gestión de usuarios, carritos, productos, facturas, pagos y recibos.
+servers:
+  - url: http://localhost:3000
+    description: Servidor local
+
+paths:
+  /users:
+    get:
+      tags:
+        - Usuarios
+      summary: Obtener todos los usuarios
+      description: Devuelve una lista de todos los usuarios registrados.
+      responses:
+        '200':
+          description: Lista de usuarios devuelta correctamente.
+        '500':
+          description: Error al obtener los usuarios.
+    post:
+      tags:
+        - Usuarios
+      summary: Crear un usuario
+      description: Crea un nuevo usuario y lo sincroniza con Facturapi.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: Usuario creado exitosamente.
+        '400':
+          description: Error al crear el usuario.
+  /users/{id}:
+    get:
+      tags:
+        - Usuarios
+      summary: Obtener un usuario por ID
+      description: Devuelve los detalles de un usuario por su ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Usuario encontrado exitosamente.
+        '404':
+          description: Usuario no encontrado.
+  /users/facturapi/{facturapiId}:
+    delete:
+      tags:
+        - Usuarios
+      summary: Eliminar un usuario
+      description: Elimina un usuario tanto de MongoDB como de Facturapi.
+      parameters:
+        - name: facturapiId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Usuario eliminado exitosamente.
+        '404':
+          description: Usuario no encontrado.
+
+  /carrito:
+    get:
+      tags:
+        - Carrito
+      summary: Obtener todos los carritos
+      description: Devuelve una lista de todos los carritos registrados.
+      responses:
+        '200':
+          description: Lista de carritos devuelta correctamente.
+        '500':
+          description: Error al obtener los carritos.
+    post:
+      tags:
+        - Carrito
+      summary: Crear un carrito
+      description: Crea un nuevo carrito.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Carrito'
+      responses:
+        '201':
+          description: Carrito creado exitosamente.
+        '500':
+          description: Error al crear el carrito.
+  /carrito/{id}:
+    get:
+      tags:
+        - Carrito
+      summary: Obtener un carrito por ID
+      description: Devuelve los detalles de un carrito por su ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Carrito encontrado exitosamente.
+        '404':
+          description: Carrito no encontrado.
+    delete:
+      tags:
+        - Carrito
+      summary: Eliminar un carrito
+      description: Elimina un carrito por su ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Carrito eliminado exitosamente.
+        '404':
+          description: Carrito no encontrado.
+    put:
+      tags:
+        - Carrito
+      summary: Actualizar estado de un carrito
+      description: Actualiza el estado de un carrito por su ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: ['Activo', 'Inactivo']
+                  description: Nuevo estado del carrito.
+      responses:
+        '200':
+          description: Estado del carrito actualizado exitosamente.
+        '404':
+          description: Carrito no encontrado.
+
+  /products:
+    get:
+      tags:
+        - Productos
+      summary: Obtener todos los productos
+      description: Devuelve una lista de todos los productos registrados.
+      responses:
+        '200':
+          description: Lista de productos devuelta correctamente.
+        '500':
+          description: Error al obtener los productos.
+    post:
+      tags:
+        - Productos
+      summary: Crear un producto
+      description: Crea un nuevo producto en MongoDB y Facturapi.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '201':
+          description: Producto creado exitosamente.
+        '400':
+          description: Error al crear el producto.
+  /products/{id}:
+    put:
+      tags:
+        - Productos
+      summary: Actualizar un producto
+      description: Actualiza un producto por su ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '200':
+          description: Producto actualizado exitosamente.
+        '404':
+          description: Producto no encontrado.
+    delete:
+      tags:
+        - Productos
+      summary: Eliminar un producto
+      description: Elimina un producto por su ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Producto eliminado exitosamente.
+        '404':
+          description: Producto no encontrado.
+
+  /facturas/download/{receiptId}:
+    get:
+      tags:
+        - Facturas y Recibos
+      summary: Descargar recibo en PDF
+      description: Descarga un recibo en formato PDF usando su ID.
+      parameters:
+        - name: receiptId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Recibo descargado exitosamente.
+        '400':
+          description: Error al descargar el recibo.
+  /facturas/from-cart/{cartId}:
+    post:
+      tags:
+        - Facturas y Recibos
+      summary: Crear recibo desde un carrito
+      description: Crea un recibo basado en el ID del carrito.
+      parameters:
+        - name: cartId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Recibo creado exitosamente.
+        '400':
+          description: Error al crear el recibo.
+  /facturas/send-email/{receiptId}:
+    post:
+      tags:
+        - Facturas y Recibos
+      summary: Enviar recibo por correo electrónico
+      description: Envía un recibo a un correo electrónico especificado.
+      parameters:
+        - name: receiptId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+      responses:
+        '200':
+          description: Recibo enviado exitosamente.
+        '400':
+          description: Error al enviar el recibo.
+  /facturas/create-invoice:
+    post:
+      tags:
+        - Facturas y Recibos
+      summary: Crear factura
+      description: Crea una factura con los datos proporcionados.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cartId:
+                  type: string
+                customer:
+                  type: object
+                items:
+                  type: array
+                  items:
+                    type: object
+                payment_form:
+                  type: string
+                folio_number:
+                  type: string
+                series:
+                  type: string
+      responses:
+        '201':
+          description: Factura creada exitosamente.
+        '400':
+          description: Error al crear la factura.
+  /facturas/send-invoice-email/{invoiceId}:
+    post:
+      tags:
+        - Facturas y Recibos
+      summary: Enviar factura por correo
+      description: Envía una factura por correo electrónico usando su ID.
+      parameters:
+        - name: invoiceId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+      responses:
+        '200':
+          description: Factura enviada exitosamente.
+        '400':
+          description: Error al enviar la factura.
+
+  /pagos/payment:
+    post:
+      tags:
+        - Pagos
+      summary: Procesar un pago
+      description: Crea un `PaymentIntent` para procesar un pago a través de Stripe.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                total:
+                  type: number
+                  description: Monto total a pagar.
+                cartId:
+                  type: string
+                  description: ID del carrito asociado al pago.
+                userId:
+                  type: string
+                  description: ID del usuario que realiza el pago.
+      responses:
+        '200':
+          description: Pago procesado exitosamente.
+        '400':
+          description: Error al procesar el pago.
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: ID del usuario (sincronizado con Facturapi).
+        Name:
+          type: string
+          description: Nombre del usuario.
+        email:
+          type: string
+          description: Correo electrónico del usuario.
+        password:
+          type: string
+          description: Contraseña del usuario.
+        tax_system:
+          type: string
+          description: Régimen fiscal.
+        address:
+          type: object
+          properties:
+            street:
+              type: string
+            exterior_number:
+              type: string
+            interior_number:
+              type: string
+            neighborhood:
+              type: string
+            zip:
+              type: string
+            city:
+              type: string
+            state:
+              type: string
+            country:
+              type: string
+        registrationDate:
+          type: string
+        userTipe:
+          type: string
+        rfc:
+          type: string
+        PaymentMethod:
+          type: string
+          enum: ['Tarjeta', 'Paypal', 'Bitcoin', 'Tarjeta de Credito']
+
+    Carrito:
+      type: object
+      properties:
+        clienteId:
+          type: string
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              productoId:
+                type: string
+              name:
+                type: string
+              price:
+                type: number
+              cantidad:
+                type: number
+              subtotal:
+                type: number
+              iva:
+                type: number
+        total:
+          type: number
+        status:
+          type: string
+          enum: ['Activo', 'Inactivo']
+        fechaCreacion:
+          type: string
+        fechaCierre:
+          type: string
+
+    Product:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        category:
+          type: string
+        brand:
+          type: string
+        stock:
+          type: number
+        createdAt:
+          type: string
+        imgs:
+          type: array
+          items:
+            type: string
+        product_key:
+          type: string
